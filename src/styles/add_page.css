@@ -1,0 +1,23 @@
+.home_add{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.heading_add{
+    margin-top: 0%;
+}
+
+.confirm_add_button{
+    border: 3px solid #ccc; /* Border around the button */
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px; /* Padding inside the button */
+    background-color: #f0f0f0; /* Background color of the button */
+    width: 300px;
+    height: 70px;
+    font-size: large;
+    font-weight: bold;
+    margin-top: 90px;
+    background: #A5DD9B;
+}

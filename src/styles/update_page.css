@@ -1,0 +1,9 @@
+.home_update{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.heading_update{
+    margin-top: 0%;
+}
