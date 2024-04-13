@@ -12,7 +12,7 @@ import useStore from "./global_state/phoneState";
 
 function App() {
   const { phones, setPhones } = useStore();
-
+  //change made for test commit
   const getData = async () => {
     const response = await Axios.get("http://localhost:3000/");
     console.log("Hello");
