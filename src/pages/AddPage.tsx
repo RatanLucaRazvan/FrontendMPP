@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputForm from "../components/InputForm";
 import "../styles/add_page.css";
 import { useNavigate } from "react-router-dom";
@@ -19,24 +19,34 @@ function AddPage() {
   const [prodYear, setProdYear] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const navigate = useNavigate();
-  const notifyAdd = () => {
-    toast.info('Item added!');
+  const notifyAdd = (message: string) => {
+    toast.info(message);
   };
   const notifyEmpty = () => {
     toast.info('You need to fill in the details!');
   };
   const postData = async () => {
     const data = {
-      id: Date.now(),
       name: name,
       price: price,
       prodYear: prodYear,
       description: description
     };
 
-    const response = await axios.post("http://localhost:3000/", data);
+    const response = await axios.post("http://localhost:3000/", data)
+    .then((response) =>{
+      addPhone(response.data);
+      notifyAdd('Item added!');
+    })
+    .catch((error) => {
+      if(error.message == "Network Error"){
+        notifyAdd("Network Error! Backend is down!");
+      } else{
+        console.log(error);
+        notifyAdd("Backend not responding!");
+      }
+    })
     // setPhones(response.data);
-    addPhone(response.data);
   };
 
   const handleAdd = async (e: React.FormEvent) => {
@@ -49,7 +59,6 @@ function AddPage() {
       setProdYear("");
       setDescription("");
       navigate("/");
-      notifyAdd();
     } else{
       notifyEmpty();
     }

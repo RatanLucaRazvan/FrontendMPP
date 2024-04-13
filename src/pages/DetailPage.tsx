@@ -7,7 +7,7 @@ interface Props {
 }
 function DetailPage({ phones }: Props) {
   const { id } = useParams<{ id: string }>();
-  const phone = id ? phones.find((p) => p.id === parseInt(id)) : undefined;
+  const phone = id ? phones.find((p) => p.id === id) : undefined;
 
   return (
     <div className="home_detail">

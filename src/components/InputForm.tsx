@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import "../styles/form_style.css"
 import "../styles/add_page.css"
-import { Link, useNavigate } from "react-router-dom";
 
 // todo: string;
 // setTodo: React.Dispatch<React.SetStateAction<string>>;

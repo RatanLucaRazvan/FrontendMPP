@@ -8,8 +8,8 @@ import useStore from "../global_state/phoneState";
 
 interface Props {
   phone: Phone;
-  deletablePhones: number[],
-  setDeletablePhones: React.Dispatch<React.SetStateAction<number[]>>,
+  deletablePhones: string[],
+  setDeletablePhones: React.Dispatch<React.SetStateAction<string[]>>,
 }
 
 function PhoneItem({ phone, deletablePhones, setDeletablePhones}: Props) {

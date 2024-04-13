@@ -6,8 +6,8 @@ interface PhoneState {
   phones: Phone[];
   setPhones: (phones: Phone[]) => void;
   addPhone: (phone: Phone) => void;
-  updatePhone: (id: number, updatedPhone: Phone) => void;
-  removePhone: (id: number) => void;
+  updatePhone: (id: string, updatedPhone: Phone) => void;
+  removePhone: (id: string) => void;
 }
 
 const useStore = create<PhoneState>()(

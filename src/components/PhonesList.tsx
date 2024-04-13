@@ -4,8 +4,8 @@ import "../styles/list_page.css"
 import useStore from '../global_state/phoneState';
 
 interface Props{
-    deletablePhones: number[],
-    setDeletablePhones: React.Dispatch<React.SetStateAction<number[]>>;
+    deletablePhones: string[],
+    setDeletablePhones: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 function PhonesList({deletablePhones, setDeletablePhones}: Props) {

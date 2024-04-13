@@ -17,7 +17,7 @@ import useStore from "../global_state/phoneState";
 interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  id: number;
+  id: string;
 }
 function ConfirmBox({ open, setOpen, id}: Props) {
   const {removePhone} = useStore();
@@ -25,8 +25,19 @@ function ConfirmBox({ open, setOpen, id}: Props) {
     toast.info(message);
   };
   const deleteData = async () => {
-    await Axios.delete(`http://localhost:3000/${id}`);
-    removePhone(id);
+    await axios.delete(`http://localhost:3000/${id}`)
+    .then((response) =>{
+      removePhone(id);
+      notifyDelete("Item deleted!");
+    })
+    .catch((error) => {
+      if(error.message == "Network Error"){
+        notifyDelete("Network Error! Backend is down!");
+      } else{
+        console.log(error);
+        notifyDelete("Backend not responding!");
+      }
+    })
   };
 
 
@@ -34,7 +45,6 @@ function ConfirmBox({ open, setOpen, id}: Props) {
     try {
       deleteData();
       setOpen(false);
-      notifyDelete("Item deleted!");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;

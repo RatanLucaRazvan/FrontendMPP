@@ -12,20 +12,38 @@ import useStore from "../global_state/phoneState";
 
 
 function ListPage() {
-  const [deletablePhones, setDeletablePhones] = useState<number[]>([]);
+  const [deletablePhones, setDeletablePhones] = useState<string[]>([]);
   const {removePhone} = useStore();
-  const deleteData = async (id: number) => {
-    await Axios.delete(`http://localhost:3000/${id}`);
-    removePhone(id);
+  const notifyBulkDelete = (message: string) => {
+    toast.info(message);
+  };
+  let toastSent: boolean = false;
+  const deleteData = async (id: string) => {
+    await axios.delete(`http://localhost:3000/${id}`)
+    .then((response) => {
+      removePhone(id);
+      if(toastSent === false){
+        notifyBulkDelete("Items deleted!");
+        toastSent = true;
+      }
+    })
+    .catch((error) => {
+      if(error.message == "Network Error"){
+        if(toastSent === false){
+          notifyBulkDelete("Network Error! Backend is down!");
+          toastSent = true;
+        }
+      } else{
+        console.log(error);
+        notifyBulkDelete("Backend not responding!");
+      }
+    })
   };
 
   // const getData = async () => {
   //   const response = await Axios.get("http://localhost:3000/");
   //   setPhones(response.data);
   // };
-  const notifyBulkDelete = (message: string) => {
-    toast.info(message);
-  };
   const handleBulkDelete =() => {
     if(deletablePhones.length === 0){
       notifyBulkDelete("No items selected!");
@@ -34,7 +52,6 @@ function ListPage() {
         for (let i = 0; i < deletablePhones.length; i++) {
             deleteData(deletablePhones[i]);
         }
-        notifyBulkDelete("Items deleted!");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;

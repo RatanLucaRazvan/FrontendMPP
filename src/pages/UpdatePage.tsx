@@ -14,7 +14,7 @@ import useStore from "../global_state/phoneState";
 function UpdatePage() {
   const {phones, updatePhone} = useStore();
   const { id } = useParams<{ id: string }>();
-  const phone = id ? phones.find((p) => p.id === parseInt(id)) : undefined;
+  const phone = id ? phones.find((p) => p.id === id) : undefined;
   const refName = useRef<HTMLInputElement>(null);
   const refPrice = useRef<HTMLInputElement>(null);
   const refProdYear = useRef<HTMLInputElement>(null);
@@ -26,6 +26,9 @@ function UpdatePage() {
   const [editDescription, setEditDescription] = useState<string>(
     phone!.description
   );
+  const notifyUpdate = (message: string) => {
+    toast.info(message);
+  };
   const navigate = useNavigate();
   const patchData = async () => {
     const data = {
@@ -35,26 +38,33 @@ function UpdatePage() {
       description: editDescription,
     };
 
-    const response = await axios.patch(`http://localhost:3000/${id}`, data);
+    const response = await axios.patch(`http://localhost:3000/${id}`, data)
+    .then((response) => {
+      updatePhone(id!, response.data);
+      notifyUpdate("Item updated");
+    })
+    .catch((error) => {
+      if(error.message == "Network Error"){
+        notifyUpdate("Network Error! Backend is down!");
+      } else{
+        console.log(error);
+        notifyUpdate("Backend not responding!");
+      }
+    })
     // setPhones(response.data);
-    updatePhone(parseInt(id!), response.data);
   };
 
-  const notifyUpdate = (message: string) => {
-    toast.info(message);
-  };
   const handleEdit = (e: React.FormEvent) => {
     try {
       e.preventDefault();
       patchData();
       navigate("/");
-      notifyUpdate("Item updated");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
         if (axiosError.response && axiosError.response.status === 404) {
           notifyUpdate(axiosError.response.data.message);
-        } else {
+        }else{
           notifyUpdate("An unexpected error occurred.");
         }
       } else {
