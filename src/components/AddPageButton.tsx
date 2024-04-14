@@ -1,9 +1,12 @@
 import "../styles/list_page.css";
 
-function AddPageButton() {
+interface Props{
+  text: string
+}
+function AddPageButton({text}: Props) {
   return (
     <button type="button" className="btn btn-primary add_button">
-      Add new phone
+      {text}
     </button>
   );
 }

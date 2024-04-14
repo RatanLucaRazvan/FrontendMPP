@@ -38,7 +38,7 @@ function UpdatePage() {
       description: editDescription,
     };
 
-    const response = await axios.patch(`http://localhost:3000/${id}`, data)
+    const response = await axios.patch(`http://localhost:3000/phones/${id}`, data)
     .then((response) => {
       updatePhone(id!, response.data);
       notifyUpdate("Item updated");

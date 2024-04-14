@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Phone } from "../model";
+import { Phone } from "../model/Phone";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface PhoneState {
@@ -15,14 +15,16 @@ const useStore = create<PhoneState>()(
     (set, get) => ({
       phones: [],
       setPhones: (phones) => set({ phones }),
-      addPhone: (phone) => set({ phones: [...get().phones, phone]}),
-      updatePhone: (id, updatedPhone) => set({phones: get().phones.map((phone) =>
-        {
-          if(phone.id != id)
-            return phone;
-          return updatedPhone;
-        })}),
-      removePhone: (id) => set({phones: get().phones.filter((phone) => phone.id !== id)})
+      addPhone: (phone) => set({ phones: [...get().phones, phone] }),
+      updatePhone: (id, updatedPhone) =>
+        set({
+          phones: get().phones.map((phone) => {
+            if (phone.id != id) return phone;
+            return updatedPhone;
+          }),
+        }),
+      removePhone: (id) =>
+        set({ phones: get().phones.filter((phone) => phone.id !== id) }),
     }),
     {
       name: "phones",

@@ -33,7 +33,7 @@ function AddPage() {
       description: description
     };
 
-    const response = await axios.post("http://localhost:3000/", data)
+    const response = await axios.post("http://localhost:3000/phones", data)
     .then((response) =>{
       addPhone(response.data);
       notifyAdd('Item added!');

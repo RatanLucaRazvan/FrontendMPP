@@ -8,6 +8,12 @@
     margin-top: 0%;
 }
 
+.phones_and_processors{
+    display: flex;
+    flex-direction: row;
+    gap:10cm;
+}
+
 .add_button{
     border-radius: 8px;
     width: 300px;

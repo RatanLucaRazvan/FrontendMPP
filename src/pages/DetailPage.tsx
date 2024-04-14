@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { Phone } from "../model";
-import "../styles/detail_page.css"
+import { Phone } from "../model/Phone";
+import "../styles/detail_page.css";
 
 interface Props {
   phones: Phone[];

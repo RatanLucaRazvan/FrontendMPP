@@ -9,6 +9,7 @@ import axios from "axios";
 import { ErrorResponse } from "../errors/error";
 import { toast } from "react-toastify";
 import useStore from "../global_state/phoneState";
+import ProcessorsList from "../components/ProcessorsList";
 
 
 function ListPage() {
@@ -19,7 +20,7 @@ function ListPage() {
   };
   let toastSent: boolean = false;
   const deleteData = async (id: string) => {
-    await axios.delete(`http://localhost:3000/${id}`)
+    await axios.delete(`http://localhost:3000/phones/${id}`)
     .then((response) => {
       removePhone(id);
       if(toastSent === false){
@@ -69,22 +70,31 @@ function ListPage() {
   return (
     <div className="home_list">
       <h1 className="heading_list">Phone List Administration</h1>
-      <div className="home_list">
-        <button
-          type="button"
-          className="btn btn-primary add_button"
-          onClick={() => handleBulkDelete()}
-        >
-          Bulk delete
-        </button>
-        <ExportButton/>
-        <Link to="/add-page">
-          <AddPageButton />
-        </Link>
-        <PhonesList
-          deletablePhones={deletablePhones}
-          setDeletablePhones={setDeletablePhones}
-        />
+      <div className="phones_and_processors">
+        <div className="home_processors_list">
+          <Link to="/add-page-processors">
+            <AddPageButton text="Add new processor"/>
+          </Link>
+          <ProcessorsList
+          />
+        </div>
+        <div className="home_list">
+          <button
+            type="button"
+            className="btn btn-primary add_button"
+            onClick={() => handleBulkDelete()}
+          >
+            Bulk delete
+          </button>
+          <ExportButton/>
+          <Link to="/add-page">
+            <AddPageButton text="Add new phone"/>
+          </Link>
+          <PhonesList
+            deletablePhones={deletablePhones}
+            setDeletablePhones={setDeletablePhones}
+          />
+        </div>
       </div>
     </div>
   );

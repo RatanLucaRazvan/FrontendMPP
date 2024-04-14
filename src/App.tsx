@@ -12,6 +12,7 @@ import useStore from "./global_state/phoneState";
 import axios from "axios";
 import { Socket, io } from "socket.io-client";
 import { v4 } from "uuid";
+import UpdatePageProcessor from "./pages/UpdatePageProcessor";
 
 function App() {
 
@@ -48,7 +49,7 @@ function App() {
   let socket = useRef<Socket>();
   useEffect(() => {
       let ignore = false;
-      const socket = io("http://localhost:3000/");
+      const socket = io("http://localhost:3000/phones");
       socket.on("phone", (phone) => {
         const phoneObject = JSON.parse(phone);
         // console.log(phoneObject);
@@ -71,6 +72,14 @@ function App() {
           <Route
             path="/detail-page/:id"
             element={<DetailPage phones={phones} />}
+          />
+          <Route 
+            path="/update-page-processor/:id"
+            element={<UpdatePageProcessor />}
+          />
+          <Route
+            path="/add-page-processor"
+            element={<AddPageProcessor />}
           />
         </Routes>
       </BrowserRouter>

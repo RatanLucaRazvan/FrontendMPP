@@ -25,7 +25,7 @@ function ConfirmBox({ open, setOpen, id}: Props) {
     toast.info(message);
   };
   const deleteData = async () => {
-    await axios.delete(`http://localhost:3000/${id}`)
+    await axios.delete(`http://localhost:3000/phones/${id}`)
     .then((response) =>{
       removePhone(id);
       notifyDelete("Item deleted!");
