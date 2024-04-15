@@ -65,7 +65,7 @@ function AddPage() {
   };
   return (
     <div className="home_add">
-      <h1 className="heading_add">Add Page</h1>
+      <h1 className="heading_add">Add Phone specific to this processor</h1>
       <InputForm
         name={name}
         setName={setName}

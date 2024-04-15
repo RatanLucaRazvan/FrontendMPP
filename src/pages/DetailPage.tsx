@@ -1,13 +1,19 @@
 import { useParams } from "react-router-dom";
 import { Phone } from "../model/Phone";
 import "../styles/detail_page.css";
+import axios from "axios";
+import { useEffect } from "react";
+import { Processor } from "../model/Processor";
+import useProcessorStore from "../global_state/processorState";
 
 interface Props {
   phones: Phone[];
 }
 function DetailPage({ phones }: Props) {
+  const {processors} = useProcessorStore();
   const { id } = useParams<{ id: string }>();
   const phone = id ? phones.find((p) => p.id === id) : undefined;
+  let processor = processors.find((p) => p.id === phone!.processorId);
 
   return (
     <div className="home_detail">
@@ -17,6 +23,7 @@ function DetailPage({ phones }: Props) {
         <p className="detail">Price: {phone!.price}</p>
         <p className="detail">Production Year: {phone!.prodYear}</p>
         <p className="detail"> Description: {phone!.description}</p>
+        <p className="detail"> Processor: {processor!.name}</p>
       </div>
     </div>
   );

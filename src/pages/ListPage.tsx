@@ -70,14 +70,6 @@ function ListPage() {
   return (
     <div className="home_list">
       <h1 className="heading_list">Phone List Administration</h1>
-      <div className="phones_and_processors">
-        <div className="home_processors_list">
-          <Link to="/add-page-processors">
-            <AddPageButton text="Add new processor"/>
-          </Link>
-          <ProcessorsList
-          />
-        </div>
         <div className="home_list">
           <button
             type="button"
@@ -87,15 +79,14 @@ function ListPage() {
             Bulk delete
           </button>
           <ExportButton/>
-          <Link to="/add-page">
+          {/* <Link to="/add-page">
             <AddPageButton text="Add new phone"/>
-          </Link>
+          </Link> */}
           <PhonesList
             deletablePhones={deletablePhones}
             setDeletablePhones={setDeletablePhones}
           />
         </div>
-      </div>
     </div>
   );
 }

@@ -58,7 +58,7 @@ function UpdatePage() {
     try {
       e.preventDefault();
       patchData();
-      navigate("/");
+      navigate("/phones-list-page");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;

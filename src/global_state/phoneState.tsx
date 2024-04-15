@@ -8,6 +8,7 @@ interface PhoneState {
   addPhone: (phone: Phone) => void;
   updatePhone: (id: string, updatedPhone: Phone) => void;
   removePhone: (id: string) => void;
+  removePhoneByProcessor: (processorId: string) => void;
 }
 
 const useStore = create<PhoneState>()(
@@ -25,6 +26,7 @@ const useStore = create<PhoneState>()(
         }),
       removePhone: (id) =>
         set({ phones: get().phones.filter((phone) => phone.id !== id) }),
+      removePhoneByProcessor: (processorId) => set({phones: get().phones.filter((phone) => phone.processorId !== processorId)})
     }),
     {
       name: "phones",

@@ -3,7 +3,7 @@ import useProcessorStore from '../global_state/processorState';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import InputForm from '../components/InputForm';
+import InputFormProcessor from '../components/InputFormProcessor';
 
 function AddPageProcessor() {
     const {addProcessor} = useProcessorStore();
@@ -24,7 +24,7 @@ function AddPageProcessor() {
         speed: speed
       };
   
-      const response = await axios.post("http://localhost:3000/phones", data)
+      const response = await axios.post("http://localhost:3000/processors", data)
       .then((response) =>{
         addProcessor(response.data);
         notifyAdd('Item added!');
@@ -56,7 +56,7 @@ function AddPageProcessor() {
     return (
       <div className="home_add">
         <h1 className="heading_add">Add Page</h1>
-        <InputForm
+        <InputFormProcessor
           name={name}
           setName={setName}
           prodYear={prodYear}
@@ -64,7 +64,7 @@ function AddPageProcessor() {
           speed={speed}
           setSpeed={setSpeed}
           handleAdd={handleAdd}
-        ></InputForm>
+        ></InputFormProcessor>
       </div>
     );
 }

@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import ConfirmBox from "./ConfirmBox";
 import "../styles/item.css";
 import useStore from "../global_state/phoneState";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { ErrorResponse } from "../errors/error";
 
 interface Props {
   phone: Phone;
@@ -15,7 +18,7 @@ interface Props {
 function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
-  const { phones } = useStore();
+  const { phones, removePhone} = useStore();
   // const router = createBrowserRouter(
   //     createRoutesFromElements(
   //       <Route
@@ -41,6 +44,46 @@ function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
       setDeletablePhones(
         deletablePhones.filter((currId) => currId !== phone.id)
       );
+    }
+  };
+
+  const notifyDelete = (message: string) => {
+    toast.info(message);
+  };
+
+  const deleteData = async () => {
+    await axios.delete(`http://localhost:3000/phones/${phone.id}`)
+    .then((response) =>{
+      removePhone(phone.id);
+      notifyDelete("Item deleted!");
+    })
+    .catch((error) => {
+      if(error.message == "Network Error"){
+        notifyDelete("Network Error! Backend is down!");
+      } else{
+        console.log(error);
+        notifyDelete("Backend not responding!");
+      }
+    })
+  };
+
+
+  const handleDelete = () => {
+    try {
+      deleteData();
+      setOpen(false);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response && axiosError.response.status === 404) {
+          notifyDelete(axiosError.response.data.message);
+        } else {
+          notifyDelete("An unexpected error occurred.");
+        }
+      } else {
+        notifyDelete("An unexpected error occurred.");
+      }
+      setOpen(false);
     }
   };
   return (
@@ -75,7 +118,7 @@ function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
             }}
           />
         </div>
-        <ConfirmBox open={open} setOpen={setOpen} id={phone.id} />
+        <ConfirmBox open={open} setOpen={setOpen} id={phone.id} handleDelete={handleDelete} message="Are you sure you want to delete this phone"/>
       </div>
     </div>
   );

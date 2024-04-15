@@ -18,47 +18,49 @@ interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   id: string;
+  handleDelete: () => void;
+  message: string;
 }
-function ConfirmBox({ open, setOpen, id}: Props) {
+function ConfirmBox({ open, setOpen, id, handleDelete, message}: Props) {
   const {removePhone} = useStore();
-  const notifyDelete = (message: string) => {
-    toast.info(message);
-  };
-  const deleteData = async () => {
-    await axios.delete(`http://localhost:3000/phones/${id}`)
-    .then((response) =>{
-      removePhone(id);
-      notifyDelete("Item deleted!");
-    })
-    .catch((error) => {
-      if(error.message == "Network Error"){
-        notifyDelete("Network Error! Backend is down!");
-      } else{
-        console.log(error);
-        notifyDelete("Backend not responding!");
-      }
-    })
-  };
+  // const notifyDelete = (message: string) => {
+  //   toast.info(message);
+  // };
+  // const deleteData = async () => {
+  //   await axios.delete(`http://localhost:3000/phones/${id}`)
+  //   .then((response) =>{
+  //     removePhone(id);
+  //     notifyDelete("Item deleted!");
+  //   })
+  //   .catch((error) => {
+  //     if(error.message == "Network Error"){
+  //       notifyDelete("Network Error! Backend is down!");
+  //     } else{
+  //       console.log(error);
+  //       notifyDelete("Backend not responding!");
+  //     }
+  //   })
+  // };
 
 
-  const handleDelete = () => {
-    try {
-      deleteData();
-      setOpen(false);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        if (axiosError.response && axiosError.response.status === 404) {
-          notifyDelete(axiosError.response.data.message);
-        } else {
-          notifyDelete("An unexpected error occurred.");
-        }
-      } else {
-        notifyDelete("An unexpected error occurred.");
-      }
-      setOpen(false);
-    }
-  };
+  // const handleDelete = () => {
+  //   try {
+  //     deleteData();
+  //     setOpen(false);
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       const axiosError = error as AxiosError<ErrorResponse>;
+  //       if (axiosError.response && axiosError.response.status === 404) {
+  //         notifyDelete(axiosError.response.data.message);
+  //       } else {
+  //         notifyDelete("An unexpected error occurred.");
+  //       }
+  //     } else {
+  //       notifyDelete("An unexpected error occurred.");
+  //     }
+  //     setOpen(false);
+  //   }
+  // };
 
   return (
     <div>
@@ -88,7 +90,7 @@ function ConfirmBox({ open, setOpen, id}: Props) {
               >
                 <Typography>Delete phone</Typography>
                 <Typography>
-                  Are you sure you want to delete this phone?
+                  {message}
                 </Typography>
               </Box>
             </Grid>
