@@ -1,9 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Phone } from "../model/Phone";
 import "../styles/detail_page.css";
-import axios from "axios";
-import { useEffect } from "react";
-import { Processor } from "../model/Processor";
 import useProcessorStore from "../global_state/processorState";
 
 interface Props {

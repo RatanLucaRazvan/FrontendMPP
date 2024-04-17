@@ -24,7 +24,7 @@ function AddPageProcessor() {
         speed: speed
       };
   
-      const response = await axios.post("http://localhost:3000/processors", data)
+      await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/processors`, data)
       .then((response) =>{
         addProcessor(response.data);
         notifyAdd('Item added!');

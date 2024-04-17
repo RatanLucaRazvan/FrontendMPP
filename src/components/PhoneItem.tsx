@@ -52,8 +52,8 @@ function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
   };
 
   const deleteData = async () => {
-    await axios.delete(`http://localhost:3000/phones/${phone.id}`)
-    .then((response) =>{
+    await axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/phones/${phone.id}`)
+    .then(() =>{
       removePhone(phone.id);
       notifyDelete("Item deleted!");
     })
@@ -118,7 +118,7 @@ function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
             }}
           />
         </div>
-        <ConfirmBox open={open} setOpen={setOpen} id={phone.id} handleDelete={handleDelete} message="Are you sure you want to delete this phone"/>
+        <ConfirmBox open={open} setOpen={setOpen} handleDelete={handleDelete} message="Are you sure you want to delete this phone"/>
       </div>
     </div>
   );

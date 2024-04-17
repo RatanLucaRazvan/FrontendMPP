@@ -31,7 +31,7 @@ function ProcessorDetailPage() {
       processorId: processor!.id
     };
 
-    const response = await axios.post("http://localhost:3000/phones", data)
+    await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/phones`, data)
     .then((response) =>{
       addPhone(response.data);
       notifyAdd('Item added!');

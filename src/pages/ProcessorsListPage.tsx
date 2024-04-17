@@ -1,8 +1,6 @@
-import React from 'react'
 import ProcessorsList from '../components/ProcessorsList'
 import { Link } from 'react-router-dom'
 import AddPageButton from '../components/AddPageButton'
-import useProcessorStore from '../global_state/processorState'
 import "../styles/list_page.css";
 
 function ProcessorsListPage() {

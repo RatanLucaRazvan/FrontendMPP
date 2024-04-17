@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Processor } from '../model/Processor'
 import ConfirmBox from './ConfirmBox';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
@@ -27,8 +27,8 @@ function ProcessorItem({processor}: Props) {
       };
     
       const deleteData = async () => {
-        await axios.delete(`http://localhost:3000/processors/${processor.id}`)
-        .then((response) =>{
+        await axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/processors/${processor.id}`)
+        .then(() =>{
           removeProcessor(processor.id);
           removePhoneByProcessor(processor.id);
           notifyDelete("Item deleted!");
@@ -94,7 +94,7 @@ function ProcessorItem({processor}: Props) {
             }}
           /> */}
         </div>
-        <ConfirmBox open={open} setOpen={setOpen} id={processor.id} handleDelete={handleDelete} message="Are you sure you want to delete this processor?" />
+        <ConfirmBox open={open} setOpen={setOpen} handleDelete={handleDelete} message="Are you sure you want to delete this processor?" />
       </div>
     </div>
   )

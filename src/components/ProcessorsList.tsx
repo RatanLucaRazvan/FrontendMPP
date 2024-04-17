@@ -1,4 +1,3 @@
-import React from 'react'
 import useProcessorStore from '../global_state/processorState'
 import ProcessorItem from './ProcessorItem';
 import "../styles/list_page.css"

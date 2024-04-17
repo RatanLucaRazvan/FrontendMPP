@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InputForm from "../components/InputForm";
 import "../styles/add_page.css";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ function AddPage() {
       description: description
     };
 
-    const response = await axios.post("http://localhost:3000/phones", data)
+    await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/phones`, data)
     .then((response) =>{
       addPhone(response.data);
       notifyAdd('Item added!');

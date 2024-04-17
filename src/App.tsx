@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./pages/AddPage";
@@ -13,21 +13,22 @@ import AddPageProcessor from "./pages/AddPageProcessor";
 import useProcessorStore from "./global_state/processorState";
 import ProcessorDetailPage from "./pages/ProcessorDetailPage";
 import ListPage from "./pages/ListPage";
+import { Socket, io } from "socket.io-client";
 
 function App() {
 
   // Second entity - processors(Snapdragon, MediaTek, Apple)
-  const { phones, setPhones} = useStore();
-  const {processors, setProcessors} = useProcessorStore();
+  const { phones, setPhones, addPhone} = useStore();
+  const {processors, setProcessors, addProcessor} = useProcessorStore();
   const notifyBackendDown = (message: string) => {
     toast.info(message);
   };
 
-  // const notifyCronJobAdded = (message: string) => {
-  //   toast.info(message);
-  // }
+  const notifyCronJobAdded = (message: string) => {
+    toast.info(message);
+  }
   const getPhoneData = async () => {
-      const response = await axios.get("http://localhost:3000/phones")
+      await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/phones?price=DESC`)
       .then(response => {
         setPhones(response.data);
       })
@@ -43,7 +44,7 @@ function App() {
   };
 
   const getProcessorData = async () => {
-    const response = await axios.get("http://localhost:3000/processors")
+    await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/processors?speed=ASC`)
     .then(response => {
       setProcessors(response.data);
       console.log(processors);
@@ -68,12 +69,18 @@ function App() {
   // let socket = useRef<Socket>();
   // useEffect(() => {
   //     let ignore = false;
-  //     const socket = io("http://localhost:3000/phones");
+  //     const socket = io("http://localhost:3000/");
   //     socket.on("phone", (phone) => {
   //       const phoneObject = JSON.parse(phone);
   //       // console.log(phoneObject);
   //       addPhone(phoneObject);
   //       notifyCronJobAdded("Cron job added phone!");
+  //     });
+  //     socket.on("processor", (processor) => {
+  //       const processorObject = JSON.parse(processor);
+  //       // console.log(phoneObject);
+  //       addProcessor(processorObject);
+  //       notifyCronJobAdded("Cron job added processor!");
   //     });
   //     return () => { 
   //       ignore = true; 

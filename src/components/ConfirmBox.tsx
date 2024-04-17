@@ -8,21 +8,14 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import axios, { AxiosError } from "axios";
-import Axios from "axios";
-import { toast } from "react-toastify";
-import { ErrorResponse } from "../errors/error";
-import useStore from "../global_state/phoneState";
 
 interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  id: string;
   handleDelete: () => void;
   message: string;
 }
-function ConfirmBox({ open, setOpen, id, handleDelete, message}: Props) {
-  const {removePhone} = useStore();
+function ConfirmBox({ open, setOpen, handleDelete, message}: Props) {
   // const notifyDelete = (message: string) => {
   //   toast.info(message);
   // };

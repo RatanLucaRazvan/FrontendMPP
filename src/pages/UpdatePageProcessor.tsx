@@ -10,9 +10,8 @@ function UpdatePageProcessor() {
     const { id } = useParams<{ id: string }>();
     const processor = id ? processors.find((p) => p.id === id) : undefined;
     const refName = useRef<HTMLInputElement>(null);
-    const refPrice = useRef<HTMLInputElement>(null);
     const refProdYear = useRef<HTMLInputElement>(null);
-    const refDescription = useRef<HTMLInputElement>(null);
+    const refSpeed = useRef<HTMLInputElement>(null);
   
     const [editName, setEditName] = useState<string>(processor!.name);
     const [editProdYear, setEditProdYear] = useState<number>(processor!.prodYear);
@@ -30,7 +29,7 @@ function UpdatePageProcessor() {
         speed: editSpeed,
       };
   
-      const response = await axios.patch(`http://localhost:3000/processors/${id}`, data)
+      await axios.patch(`${import.meta.env.VITE_REACT_APP_API_URL}/processors/${id}`, data)
       .then((response) => {
         updateProcessor(id!, response.data);
         notifyUpdate("Item updated");
@@ -92,13 +91,13 @@ function UpdatePageProcessor() {
               />
               <input
                 className="new"
-                ref={refDescription}
+                ref={refSpeed}
                 value={editSpeed}
                 onChange={(e) => setEditSpeed(e.target.value)}
               />
             </div>
             <button type={"submit"} className="confirm_add_button">
-              Update phone
+              Update processor
             </button>
           </div>
         </form>

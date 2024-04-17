@@ -1,15 +1,13 @@
 import { useState } from "react";
-import AddPageButton from "../components/AddPageButton";
 import PhonesList from "../components/PhonesList";
-import { Link } from "react-router-dom";
 import "../styles/list_page.css";
 import ExportButton from "../components/ExportButton";
-import Axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import axios from "axios";
 import { ErrorResponse } from "../errors/error";
 import { toast } from "react-toastify";
 import useStore from "../global_state/phoneState";
-import ProcessorsList from "../components/ProcessorsList";
+import { Link } from "react-router-dom";
 
 
 function ListPage() {
@@ -20,8 +18,8 @@ function ListPage() {
   };
   let toastSent: boolean = false;
   const deleteData = async (id: string) => {
-    await axios.delete(`http://localhost:3000/phones/${id}`)
-    .then((response) => {
+    await axios.delete(`${import.meta.env.VITE_REACT_APP_API_URL}/phones/${id}`)
+    .then(() => {
       removePhone(id);
       if(toastSent === false){
         notifyBulkDelete("Items deleted!");
@@ -82,6 +80,14 @@ function ListPage() {
           {/* <Link to="/add-page">
             <AddPageButton text="Add new phone"/>
           </Link> */}
+          <Link to="/">
+            <button
+              type="button"
+              className="btn btn-primary add_button"
+            >
+              Go back to processors
+            </button>
+          </Link>
           <PhonesList
             deletablePhones={deletablePhones}
             setDeletablePhones={setDeletablePhones}
