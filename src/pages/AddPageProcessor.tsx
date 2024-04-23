@@ -4,9 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import InputFormProcessor from '../components/InputFormProcessor';
+import { v4 } from 'uuid';
+import { FrontProcessor } from '../model/FrontProcessor';
+import useFrontProcessorStore from '../global_state/frontProcessorsStore';
+import { Processor } from '../model/Processor';
 
 function AddPageProcessor() {
     const {addProcessor} = useProcessorStore();
+    const {addFrontProcessor} = useFrontProcessorStore();
     const [name, setName] = useState<string>("");
     const [prodYear, setProdYear] = useState<string>("");
     const [speed, setSpeed] = useState<string>("");
@@ -30,12 +35,24 @@ function AddPageProcessor() {
         notifyAdd('Item added!');
       })
       .catch((error) => {
-        if(error.message == "Network Error"){
-          notifyAdd("Network Error! Backend is down!");
-        } else{
-          console.log(error);
-          notifyAdd("Backend not responding!");
-        }
+        let newFrontProcessor: FrontProcessor = {id: v4(),
+          name: name,
+          prodYear: parseInt(prodYear),
+          speed: speed,
+          deleted: false,
+          updated: false}
+        addFrontProcessor(newFrontProcessor)
+        let newProcessor: Processor = {id: newFrontProcessor.id,
+          name: name,
+          prodYear: parseInt(prodYear),
+          speed: speed}
+        addProcessor(newProcessor)
+        // if(error.message == "Network Error"){
+        //   notifyAdd("Network Error! Backend is down!");
+        // } else{
+        //   console.log(error);
+        //   notifyAdd("Backend not responding!");
+        // }
       })
       // setPhones(response.data);
     };

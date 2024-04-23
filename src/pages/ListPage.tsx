@@ -8,11 +8,13 @@ import { ErrorResponse } from "../errors/error";
 import { toast } from "react-toastify";
 import useStore from "../global_state/phoneState";
 import { Link } from "react-router-dom";
+import useFrontStore from "../global_state/frontPhoneState";
 
 
 function ListPage() {
   const [deletablePhones, setDeletablePhones] = useState<string[]>([]);
-  const {removePhone} = useStore();
+  const {phones, removePhone} = useStore();
+  const {frontPhones, removeFrontPhone, addFrontPhone, updateFrontPhone} = useFrontStore();
   const notifyBulkDelete = (message: string) => {
     toast.info(message);
   };
@@ -27,15 +29,46 @@ function ListPage() {
       }
     })
     .catch((error) => {
-      if(error.message == "Network Error"){
-        if(toastSent === false){
-          notifyBulkDelete("Network Error! Backend is down!");
-          toastSent = true;
+      const phone = id ? phones.find((p) => p.id === id) : undefined;
+      let newFrontPhone = {id: phone!.id,
+        processorId: phone!.processorId,
+        price: phone!.price,
+        name: phone!.name,
+        prodYear: phone!.prodYear,
+        description: phone!.description,
+        deleted: true,
+        updated: false}
+      let found = false;
+      let updated = false
+      for(let i = 0; i < frontPhones.length; i++){
+        if(frontPhones[i].id == newFrontPhone.id){
+          if(frontPhones[i].updated == false){
+            found = true;
+            removeFrontPhone(newFrontPhone.id);
+          } else{
+            updated = true;
+          }
         }
-      } else{
-        console.log(error);
-        notifyBulkDelete("Backend not responding!");
       }
+      if(!found){
+        if(updated == false){
+          addFrontPhone(newFrontPhone)
+        } else{
+          newFrontPhone.updated = true;
+          updateFrontPhone(newFrontPhone.id, newFrontPhone)
+        }
+      }
+      removePhone(id);
+      notifyBulkDelete("Phones deleted in front")
+      // if(error.message == "Network Error"){
+      //   if(toastSent === false){
+      //     notifyBulkDelete("Network Error! Backend is down!");
+      //     toastSent = true;
+      //   }
+      // } else{
+      //   console.log(error);
+      //   notifyBulkDelete("Backend not responding!");
+      // }
     })
   };
 

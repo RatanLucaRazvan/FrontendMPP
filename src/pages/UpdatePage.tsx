@@ -1,11 +1,15 @@
 import React, { useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useFetcher, useNavigate, useParams } from "react-router-dom";
 import "../styles/update_page.css";
 import "../styles/form_style.css";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { ErrorResponse } from "../errors/error";
 import useStore from "../global_state/phoneState";
+import useFrontStore from "../global_state/frontPhoneState";
+import { v4 } from "uuid";
+import { FrontPhone } from "../model/FrontPhone";
+import { Phone } from "../model/Phone";
 // interface Props {
 //   phones: Phone[];
 //   setPhones: React.Dispatch<React.SetStateAction<Phone[]>>;
@@ -13,6 +17,7 @@ import useStore from "../global_state/phoneState";
 
 function UpdatePage() {
   const {phones, updatePhone} = useStore();
+  const {frontPhones, addFrontPhone, updateFrontPhone} = useFrontStore();
   const { id } = useParams<{ id: string }>();
   const phone = id ? phones.find((p) => p.id === id) : undefined;
   const refName = useRef<HTMLInputElement>(null);
@@ -44,12 +49,40 @@ function UpdatePage() {
       notifyUpdate("Item updated");
     })
     .catch((error) => {
-      if(error.message == "Network Error"){
-        notifyUpdate("Network Error! Backend is down!");
-      } else{
-        console.log(error);
-        notifyUpdate("Backend not responding!");
+      let newFrontPhone: FrontPhone = {id: phone!.id,
+        processorId: phone!.processorId,
+        price: editPrice,
+        name: editName,
+        prodYear: editProdYear,
+        description: editDescription,
+        deleted: false,
+        updated: false}
+      let found = false;
+      for(let i = 0; i < frontPhones.length; i++){
+        if(frontPhones[i].id == newFrontPhone.id){
+          found = true;
+          updateFrontPhone(newFrontPhone.id, newFrontPhone);
+        }
       }
+      if(found == false)
+      {
+        newFrontPhone.updated = true;
+        addFrontPhone(newFrontPhone)
+      }
+      let newPhone: Phone = {id: phone!.id,
+        processorId: phone!.processorId,
+        price: editPrice,
+        name: editName,
+        prodYear: editProdYear,
+        description: editDescription}
+      updatePhone(id!, newPhone)
+      notifyUpdate("Phone updated in front!")
+      // if(error.message == "Network Error"){
+      //   notifyUpdate("Network Error! Backend is down!");
+      // } else{
+      //   console.log(error);
+      //   notifyUpdate("Backend not responding!");
+      // }
     })
     // setPhones(response.data);
   };

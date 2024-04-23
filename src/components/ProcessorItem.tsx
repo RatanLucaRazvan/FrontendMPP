@@ -8,6 +8,10 @@ import { ErrorResponse } from '../errors/error';
 import useProcessorStore from '../global_state/processorState';
 import { toast } from 'react-toastify';
 import useStore from '../global_state/phoneState';
+import { FrontProcessor } from '../model/FrontProcessor';
+import useFrontProcessorStore from '../global_state/frontProcessorsStore';
+import useFrontStore from '../global_state/frontPhoneState';
+import { FrontPhone } from '../model/FrontPhone';
 
 
 interface Props{
@@ -15,7 +19,9 @@ interface Props{
 }
 function ProcessorItem({processor}: Props) {
     const {removeProcessor} = useProcessorStore();
-    const {removePhoneByProcessor} = useStore();
+    const {removePhoneByProcessor, phones} = useStore();
+    const {removeFrontProcessor, frontProcessors, addFrontProcessor, updateFrontProcessor} = useFrontProcessorStore();
+    const {removeFrontPhoneByProcessor, frontPhones, addFrontPhone, removeFrontPhone, updateFrontPhone} = useFrontStore();
     const [open, setOpen] = useState(false);
 
     function openDelete() {
@@ -34,12 +40,80 @@ function ProcessorItem({processor}: Props) {
           notifyDelete("Item deleted!");
         })
         .catch((error) => {
-          if(error.message == "Network Error"){
-            notifyDelete("Network Error! Backend is down!");
-          } else{
-            console.log(error);
-            notifyDelete("Backend not responding!");
+          let newFrontProcessor: FrontProcessor = {id: processor.id,
+            name: processor.name,
+            prodYear: processor.prodYear,
+            speed: processor.speed,
+            deleted: true,
+            updated: false}
+          let found = false;
+          let updated = false;
+          for(let i = 0; i < frontProcessors.length; i++){
+            if(frontProcessors[i].id == newFrontProcessor.id){
+              if(frontProcessors[i].updated === false){
+                found = true;
+                removeFrontProcessor(newFrontProcessor.id);
+              } else{
+                updated = true;
+              }
+            }
           }
+          if(!found){
+            if(updated === false){
+              addFrontProcessor(newFrontProcessor)
+            } else{
+              newFrontProcessor.updated = true;
+              updateFrontProcessor(newFrontProcessor.id, newFrontProcessor)
+            }
+          }
+          for(let i = 0; i < phones.length; i++){
+            if(phones[i].processorId == processor.id){
+                // console.log(phones[i])
+                // console.log(frontPhones)
+                const currPhoneId = phones[i].id
+                // const phone = frontPhones.find((p) => {p.id === currPhoneId});
+                var phone = undefined;
+                for(let j = 0; j < frontPhones.length; j++){
+                  console.log(frontPhones[j].id)
+                  console.log(currPhoneId)
+                  if(frontPhones[j].id == currPhoneId){
+                    phone = frontPhones[j];
+                    break;
+                  }
+                }
+                let frontPhone: FrontPhone = {id: phones[i].id,
+                    processorId: processor.id,
+                    price: phones[i].price,
+                    name: phones[i].name,
+                    prodYear: phones[i].prodYear,
+                    description: phones[i].description,
+                    deleted: true,
+                    updated: false
+                }
+                console.log(phone)
+                if(!phone){
+                    addFrontPhone(frontPhone)
+                } else{
+                    if(phone.updated = false){
+                        removeFrontPhone(phone.id)
+                    }
+                    else{
+                        updateFrontPhone(phone.id, frontPhone)
+                    }
+
+                }
+            }
+          }
+          removeProcessor(processor.id);
+          // removeFrontPhoneByProcessor(processor.id)
+          removePhoneByProcessor(processor.id);
+          
+          // if(error.message == "Network Error"){
+          //   notifyDelete("Network Error! Backend is down!");
+          // } else{
+          //   console.log(error);
+          //   notifyDelete("Backend not responding!");
+          // }
         })
       };
     

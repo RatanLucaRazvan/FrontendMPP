@@ -5,6 +5,7 @@ import { Processor } from "../model/Processor";
 interface ProcessorState {
   processors: Processor[];
   setProcessors: (processor: Processor[]) => void;
+  addMoreProcessors: (processors: Processor[]) => void;
   addProcessor: (processor: Processor) => void;
   updateProcessor: (id: string, updatedProcessor: Processor) => void;
   removeProcessor: (id: string) => void;
@@ -15,6 +16,7 @@ const useProcessorStore = create<ProcessorState>()(
     (set, get) => ({
       processors: [],
       setProcessors: (processors) => set({ processors }),
+      addMoreProcessors: (processors: Processor[]) => set({processors: [...get().processors, ...processors]}),
       addProcessor: (processor) => set({ processors: [...get().processors, processor] }),
       updateProcessor: (id, updatedProcessor) =>
         set({

@@ -8,6 +8,7 @@ import useStore from "../global_state/phoneState";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { ErrorResponse } from "../errors/error";
+import useFrontStore from "../global_state/frontPhoneState";
 
 interface Props {
   phone: Phone;
@@ -19,6 +20,7 @@ function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
   const { phones, removePhone} = useStore();
+  const {frontPhones, addFrontPhone, removeFrontPhone, updateFrontPhone} = useFrontStore();
   // const router = createBrowserRouter(
   //     createRoutesFromElements(
   //       <Route
@@ -58,12 +60,42 @@ function PhoneItem({ phone, deletablePhones, setDeletablePhones }: Props) {
       notifyDelete("Item deleted!");
     })
     .catch((error) => {
-      if(error.message == "Network Error"){
-        notifyDelete("Network Error! Backend is down!");
-      } else{
-        console.log(error);
-        notifyDelete("Backend not responding!");
+      let newFrontPhone = {id: phone.id,
+        processorId: phone.processorId,
+        price: phone.price,
+        name: phone.name,
+        prodYear: phone.prodYear,
+        description: phone.description,
+        deleted: true,
+        updated: false}
+      let found = false;
+      let needsUpdate = false;
+      for(let i = 0; i < frontPhones.length; i++){
+        if(frontPhones[i].id === newFrontPhone.id ){
+          if(frontPhones[i].updated === false){
+            found = true;
+            removeFrontPhone(newFrontPhone.id);
+          } else{
+            needsUpdate = true;
+          }
+        }
       }
+      if(!found){
+        if(needsUpdate === false){
+          addFrontPhone(newFrontPhone)
+        } else{
+          newFrontPhone.updated = true;
+          updateFrontPhone(newFrontPhone.id, newFrontPhone)
+        }
+      }
+      removePhone(phone.id);
+      notifyDelete("Phone deleted in front");
+      // if(error.message == "Network Error"){
+      //   notifyDelete("Network Error! Backend is down!");
+      // } else{
+      //   console.log(error);
+      //   notifyDelete("Backend not responding!");
+      // }
     })
   };
 

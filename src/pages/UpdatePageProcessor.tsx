@@ -4,9 +4,13 @@ import useProcessorStore from '../global_state/processorState';
 import { toast } from 'react-toastify';
 import axios, { AxiosError } from 'axios';
 import { ErrorResponse } from '../errors/error';
+import { FrontProcessor } from '../model/FrontProcessor';
+import useFrontProcessorStore from '../global_state/frontProcessorsStore';
+import { Processor } from '../model/Processor';
 
 function UpdatePageProcessor() {
     const {processors, updateProcessor} = useProcessorStore();
+    const {frontProcessors, updateFrontProcessor, addFrontProcessor} = useFrontProcessorStore();
     const { id } = useParams<{ id: string }>();
     const processor = id ? processors.find((p) => p.id === id) : undefined;
     const refName = useRef<HTMLInputElement>(null);
@@ -35,12 +39,35 @@ function UpdatePageProcessor() {
         notifyUpdate("Item updated");
       })
       .catch((error) => {
-        if(error.message == "Network Error"){
-          notifyUpdate("Network Error! Backend is down!");
-        } else{
-          console.log(error);
-          notifyUpdate("Backend not responding!");
+        let newFrontProcessor: FrontProcessor = {id: processor!.id,
+          name: editName,
+          prodYear: editProdYear,
+          speed: editSpeed,
+          deleted: false,
+          updated: false}
+        let found = false;
+        for(let i = 0; i < frontProcessors.length; i++){
+          if(frontProcessors[i].id == newFrontProcessor.id){
+            found = true;
+            updateFrontProcessor(newFrontProcessor.id, newFrontProcessor);
+          }
         }
+        if(found == false)
+        {
+          newFrontProcessor.updated = true;
+          addFrontProcessor(newFrontProcessor)
+        }
+        let newProcessor: Processor = {id: processor!.id,
+          name: editName,
+          prodYear: editProdYear,
+          speed: editSpeed}
+        updateProcessor(id!, newProcessor)
+        // if(error.message == "Network Error"){
+        //   notifyUpdate("Network Error! Backend is down!");
+        // } else{
+        //   console.log(error);
+        //   notifyUpdate("Backend not responding!");
+        // }
       })
       // setPhones(response.data);
     };
