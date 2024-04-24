@@ -30,18 +30,12 @@ function PhonesList({deletablePhones, setDeletablePhones}: Props) {
         addMorePhones(response.data)
       })
       .catch((error) => {
-        console.log("Eroare");
-        // if(error.message == "Network Error"){
-        //   if(triedPhones == false){
-        //     notifyBackendDown("Network error! Could not take phones! Backend is down!Continue using the app, and we will sync it with our server whenever possbile!");
-        //   }
-        // }
-        // else{
-        //   if(triedPhones == false){
-        //     notifyBackendDown("Backend not responding!");
-        //   }
-        // }
-        // triedPhones = true;
+        if(error.message == "Network Error"){
+          console.log("Backend is down!")
+        }
+        else{
+            console.log("Backend not responding!");
+        }
       })
   
       // setTimeout(() => {

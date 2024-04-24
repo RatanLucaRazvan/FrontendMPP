@@ -19,6 +19,7 @@ import useFrontStore from "./global_state/frontPhoneState";
 import useFrontProcessorStore from "./global_state/frontProcessorsStore";
 import { FrontPhone } from "./model/FrontPhone";
 import { FrontProcessor } from "./model/FrontProcessor";
+import useSyncStore from "./global_state/syncState";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
   const {setFrontPhones, frontPhones, getFrontPhones} = useFrontStore();
   const {frontProcessors, setFrontProcessors, getFrontProcessors} = useFrontProcessorStore();
   const {processors, setProcessors, addProcessor} = useProcessorStore();
+  const {synced, setSynced} = useSyncStore();
   let triedPhones: boolean = false;
   let triedProcessors: boolean = false;
   var interval;
@@ -60,10 +62,11 @@ function App() {
       listPhones: frontPhonesCopy
     };
 
-    await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/restoreprocessors`, processorData)
+    await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/syncfrontdata`, processorData)
     .then((response) =>{
       // setProcessors(response.data);
       console.log(processorData);
+      setSynced(true);
       window.location.reload();
       setFrontPhones([]);
       setFrontProcessors([]);
@@ -101,6 +104,10 @@ function App() {
   const getData = async () => {
     // setFrontPhones([])
     // setFrontProcessors([])
+    if(synced === true){
+      notifyBackendDown("Server is back up! Data restored!")
+      setSynced(false);
+    }
       await axios.get(`${import.meta.env.VITE_REACT_APP_API_URL}/phones`, {
         params: {
           page: 0,
@@ -108,10 +115,6 @@ function App() {
         }
       })
       .then((response) => {
-        if(triedPhones == true){
-          notifyBackendDown("Backend is back up! Phones restored");
-          triedPhones = false;
-        }
         setPhones(response.data);
       })
       .catch((error) => {
@@ -136,10 +139,6 @@ function App() {
         }
       })
       .then(response => {
-        if(triedProcessors == true){
-          notifyBackendDown("Backend is back up! Processors restored");
-          triedProcessors = false;
-        }
         setProcessors(response.data);
         // console.log(processors);
       })

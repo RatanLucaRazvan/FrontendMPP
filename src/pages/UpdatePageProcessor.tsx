@@ -62,6 +62,7 @@ function UpdatePageProcessor() {
           prodYear: editProdYear,
           speed: editSpeed}
         updateProcessor(id!, newProcessor)
+        notifyUpdate("Prcessor updated in front!");
         // if(error.message == "Network Error"){
         //   notifyUpdate("Network Error! Backend is down!");
         // } else{

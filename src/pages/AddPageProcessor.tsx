@@ -47,6 +47,7 @@ function AddPageProcessor() {
           prodYear: parseInt(prodYear),
           speed: speed}
         addProcessor(newProcessor)
+        notifyAdd("Processors added in front!");
         // if(error.message == "Network Error"){
         //   notifyAdd("Network Error! Backend is down!");
         // } else{

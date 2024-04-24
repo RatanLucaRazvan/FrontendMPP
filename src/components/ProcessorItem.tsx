@@ -107,7 +107,7 @@ function ProcessorItem({processor}: Props) {
           removeProcessor(processor.id);
           // removeFrontPhoneByProcessor(processor.id)
           removePhoneByProcessor(processor.id);
-          
+          notifyDelete("Processor deleted in front");
           // if(error.message == "Network Error"){
           //   notifyDelete("Network Error! Backend is down!");
           // } else{
